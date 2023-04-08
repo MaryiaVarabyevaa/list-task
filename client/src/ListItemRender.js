@@ -2,11 +2,12 @@
 
 
 const ListItemRender = ({ data }) => {
+
   return <ul>
     {
       (data && Object.entries(data).length !== 0) &&
         Object.entries(data).map(([city, values]) => {
-          const { districts } = values;
+          const { districts, data } = values;
           return <li key={city}>
             { city }
             <ul>
@@ -21,18 +22,19 @@ const ListItemRender = ({ data }) => {
                             { street }
                             <ul>
                               {
-                                people.map((person) => <li>{ person }</li>)
+                                people.map((person, index) =>
+                                    <li className="person" data-city={city} data-population={data} key={index}>{ person }</li>)
                               }
                             </ul>
-                          </li>
+                          </li>;
                         })
                       }
                     </ul>
-                  </li>
+                  </li>;
                 } )
               }
             </ul>
-          </li>
+          </li>;
         })
     }
   </ul>;

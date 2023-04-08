@@ -3,12 +3,20 @@ import { useEffect, useState } from 'react';
 import { getAllCitizens } from './http/citizenAPI';
 import { getAllCities } from './http/cityAPI';
 import ListItemRender from './ListItemRender';
+import Tooltip from './Tooltip';
 
+const initialTooltip = {
+  show: false,
+  x: 0,
+  y: 0,
+};
 
 const List = () => {
   const [citizens, setCitizens] = useState([]);
   const [cities, setCities] = useState([]);
   const [info, setInfo] = useState([]);
+  const [tooltip, setTooltip] = useState(initialTooltip);
+  const [tooltipInfo, setTooltipInfo] = useState([]);
 
   const getCitizens = async() => {
     const citizens = await getAllCitizens();
@@ -45,6 +53,31 @@ const List = () => {
     }
   };
 
+  let timer;
+
+  const handlerMouseMove = (event) => {
+    event.preventDefault();
+    const elem = event.target;
+    if (elem && elem.classList.contains('person')) {
+      const { pageY, pageX } = event;
+      setTooltipInfo([elem.dataset.city, elem.dataset.population]);
+      clearTimeout(timer);
+      setTooltip(initialTooltip);
+      timer = setTimeout(() => {
+        setTooltip({ show: true, x: pageX + 10, y: pageY + 10 } );
+      }, 500);
+    }
+    else {
+      clearTimeout(timer);
+      setTooltip(initialTooltip);
+    }
+  };
+
+  useEffect(() => {
+    document.body.addEventListener('mousemove', handlerMouseMove);
+    return () => document.body.removeEventListener('mousemove', handlerMouseMove);
+  }, []);
+
   useEffect(() => {
     getCitizens().then((citizens) => setCitizens(citizens));
     getCities().then((cities) => setCities(cities));
@@ -56,6 +89,9 @@ const List = () => {
 
   return <>
     <ListItemRender data={info}/>
+    {
+      tooltip.show && <Tooltip x={tooltip.x} y={tooltip.y} tooltipInfo={tooltipInfo} />
+    }
   </>;
 };
 
