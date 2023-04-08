@@ -1,7 +1,7 @@
-import { $host } from "./index";
+import { $host } from './index';
 
 
 export const getAllCities = async () => {
-    const { data } = await $host.get('api/city');
-    return data;
-}
+  const { data } = await $host.get('api/city');
+  return data;
+};

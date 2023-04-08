@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -12,13 +12,13 @@ app.use(express.json());
 app.use(cors());
 app.use('/api', router);
 
-const start = async() => {
-    try {
-        await mongoose.connect(process.env.DB_URL);
-        app.listen(PORT, () => console.log(`Server started on ${PORT} port`));
-    } catch (err) {
-        console.log(err);
-    }
-}
+const start = async () => {
+  try {
+    await mongoose.connect(process.env.DB_URL);
+    app.listen(PORT, () => console.log(`Server started on ${PORT} port`));
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-start()
+start();
